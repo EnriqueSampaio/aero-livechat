@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Enrique's Chat</title>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw= sha512-nNo+yCHEyn0smMxSswnf/OnX6/KwJuZTlNZBjauKhTK0c+zT+q5JOCx0UFhXQ6rJR9jg6Es8gPuD2uZcYDLqSw==" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+    </head>
+    <body>
+        <div class="container-fluid">
+            <ul id="messages"></ul>
+        </div>
+        <form id="messageForm">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <input id="message" type="text" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">Send</button>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#nicknameModal">Nickname</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="modal fade" id="nicknameModal" tabindex="-1" role="dialog" aria-labelledby="nicknameModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Choose your nickname</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="nicknameForm">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div class="form-group">
+                                            <input id="nickname" type="text" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-success">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha256-KXn5puMvxCw+dAYznun+drMdG1IFl3agK0p/pqT9KAo= sha512-2e8qq0ETcfWRI4HJBzQiA3UoyFk6tbNyG+qSaIBZLyW9Xf3sWZHN/lxe9fTh1U45DpPf07yj94KsUHHWe4Yk1A==" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            var socket = io();
+            var localNickname = 'guest';
+            $('#messageForm').submit(function(){
+                socket.emit('chat message', localNickname, $('#message').val());
+                $('#message').val('');
+                return false;
+            });
+            $('#nicknameForm').submit(function(){
+                if ($('#nickname').val() !== "") {
+                    localNickname = $("#nickname").val();
+                }
+                $('#nicknameModal').modal('toggle');
+                return false;
+            });
+            socket.on('chat message', function(nickname, msg){
+                $('#messages').append($('<li>').text(nickname + ': ' + msg));
+            });
+            socket.on('user connected', function(msg){
+                $('#messages').append($('<li>').text(msg));
+            });
+            socket.on('user disconnected', function(msg){
+                $('#messages').append($('<li>').text(msg));
+            });
+        </script>
+    </body>
+</html>

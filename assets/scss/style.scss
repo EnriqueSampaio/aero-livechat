@@ -1,0 +1,34 @@
+html {
+    min-height: 100%;
+    body {
+        margin-bottom: 34px;
+        #messages {
+            list-style: none;
+            padding: 0;
+            li:nth-child(2n) {
+                background-color: #cdcdcd;
+            }
+        }
+        #messageForm {
+            bottom: 0;
+            height: 34px;
+            position: absolute;
+            width: 100%;
+            .form-group {
+                margin: 0;
+                > * {
+                    width: 100%;
+                }
+            }
+        }
+        .modal {
+        #nicknameForm {
+                .form-group {
+                    > * {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
+}
