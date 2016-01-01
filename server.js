@@ -1,17 +1,17 @@
 var IPADDRES = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 var PORT = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 
-var aerospike = require('aerospike');
 var app = require('express')();
+var db = require('./db');
 var express = require('express');
 var http = require('http').Server(app);
-var path = require('path');
 var io = require('socket.io')(http);
+var path = require('path');
+var realtime = require('./realtime');
+var routes = require('./routes');
 
-var client = aerospike.client({
-    hosts: [{ addr: '127.0.0.1', port: 3000}]
-}).connect(function(response){
-    if (response.code === aerospike.status.AEROSPIKE_OK) {
+db.connect(function(response) {
+    if (response === 0) {
         console.log('Show!');
     } else {
         console.log('Fuén');
@@ -21,22 +21,9 @@ var client = aerospike.client({
 app.use(express.static('public'));
 app.use(express.static('views'));
 
-app.get('/', function(req, res){
-    res.sendfile('index.html');
-});
+realtime(io);
+routes(app, io);
 
-io.on('connection', function(socket){
-    io.emit('user connected', 'a user connected :D');
-
-    socket.on('disconnect', function(){
-        io.emit('user disconnected', 'user disconnected :\'(');
-    });
-
-    socket.on('chat message', function(nickname, msg){
-        io.emit('chat message', nickname, msg);
-    });
-});
-
-http.listen(PORT, IPADDRES, function (){
+http.listen(PORT, IPADDRES, function () {
     console.log('linstening on ' + IPADDRES + ':' + PORT);
 });
