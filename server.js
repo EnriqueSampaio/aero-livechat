@@ -11,18 +11,15 @@ var realtime = require('./realtime');
 var routes = require('./routes');
 
 db.connect(function(response) {
-    if (response === 0) {
-        console.log('Show!');
+    if (response.code === 0) {
+        console.log("Database Connected");
     } else {
-        console.log('Fuén');
+        console.log("Error on database connection");
     }
 });
 
-app.use(express.static('public'));
-app.use(express.static('views'));
-
-realtime(io);
-routes(app, io);
+realtime(db, io);
+routes(app, express, io);
 
 http.listen(PORT, IPADDRES, function () {
     console.log('linstening on ' + IPADDRES + ':' + PORT);

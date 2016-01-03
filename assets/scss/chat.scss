@@ -2,7 +2,12 @@ html {
     min-height: 100%;
     body {
         margin-bottom: 34px;
+        #header-navbar {
+            align-items: center;
+            display: flex;
+        }
         #messages {
+            word-break: break-all;
             list-style: none;
             padding: 0;
             li:nth-child(2n) {

@@ -1,0 +1,22 @@
+@mixin translate($x, $y) {
+    -moz-transform: translate($x, $y);
+    -ms-transform: translate($x, $y);
+    -o-transform: translate($x, $y);
+    -webkit-transform: translate($x, $y);
+    transform: translate($x, $y);
+}
+
+html {
+    body {
+        #header-navbar {
+            align-items: center;
+            display: flex;
+        }
+        .login-box {
+            left: 50%;
+            position: absolute;
+            top: 50%;
+            @include translate(-50%, -50%);
+        }
+    }
+}

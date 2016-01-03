@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "aerospike": "^1.0.53",
+    "bcrypt": "^0.8.5",
     "express": "^3.4.8",
     "socket.io": "^1.3.7"
   },
